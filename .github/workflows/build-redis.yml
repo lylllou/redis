@@ -1,0 +1,29 @@
+name: Build Redis 7.4.5
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Redis source
+      run: |
+        git clone --branch 7.4.5 https://github.com/redis/redis.git
+        cd redis
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential tcl
+
+    - name: Compile Redis
+      run: |
+        cd redis
+        make -j$(nproc)
+
+    - name: Run basic test
+      run: |
+        cd redis
+        make test
