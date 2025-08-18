@@ -27,3 +27,16 @@ jobs:
       run: |
         cd redis
         make test
+        
+    - name: Package Redis as tar.gz
+      run: |
+        cd redis
+        mkdir -p redis-7.4.5-bin
+        cp src/redis-server src/redis-cli src/redis-benchmark redis-7.4.5-bin/
+        tar -czvf redis-7.4.5-bin.tar.gz redis-7.4.5-bin
+
+    - name: Upload Redis binary as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: redis-7.4.5-bin
+        path: redis/redis-7.4.5-bin.tar.gz
