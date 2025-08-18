@@ -20,8 +20,11 @@ jobs:
 
     - name: Compile Redis
       run: |
+        sudo apt update
+        sudo apt install -y musl-tools
         cd redis
-        make -j$(nproc)
+        make distclean
+        CC=musl-gcc make -j$(nproc)      
 
     - name: Run basic test
       run: |
