@@ -1,0 +1,32 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: centos:7
+
+    steps:
+    - name: Install build tools
+      run: |
+        yum install -y gcc make tar git
+
+    - name: Clone Redis
+      run: |
+        git clone --branch 7.4.5 https://github.com/redis/redis.git
+
+    - name: Build Redis
+      run: |
+        cd redis
+        make -j$(nproc)
+
+    - name: Package Redis
+      run: |
+        cd redis
+        mkdir -p redis-7.4.5-centos
+        cp src/redis-server src/redis-cli src/redis-benchmark redis-7.4.5-centos/
+        tar -czvf redis-7.4.5-centos.tar.gz redis-7.4.5-centos
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: redis-7.4.5-centos
+        path: redis/redis-7.4.5-centos.tar.gz
