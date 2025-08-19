@@ -1,3 +1,8 @@
+name: Build Redis 7.4.5
+
+on:
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
