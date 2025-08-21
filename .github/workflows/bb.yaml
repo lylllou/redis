@@ -28,13 +28,13 @@ jobs:
 
     - name: Verify static linking
       run: |
-        file redis-stable/src/redis-server
-        ldd redis-stable/src/redis-server || echo "Static binary confirmed (ldd failed)"
+        file redis-7.4.5/src/redis-server
+        ldd redis-7.4.5/src/redis-server || echo "Static binary confirmed (ldd failed)"
 
     - name: Upload Redis binary
       uses: actions/upload-artifact@v4
       with:
         name: redis-static-binaries
         path: |
-          redis-stable/src/redis-server
-          redis-stable/src/redis-cli
+          redis-7.4.5/src/redis-server
+         redis-7.4.5/src/redis-cli
