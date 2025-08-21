@@ -16,14 +16,14 @@ jobs:
         sudo apt-get install -y gcc make wget file
 
     - name: Download Redis source
-      run: wget https://download.redis.io/redis-stable.tar.gz
+      run: wget https://download.redis.io/releases/redis-7.4.5.tar.gz
 
     - name: Extract Redis source
-      run: tar xzf redis-stable.tar.gz
+      run: tar xzf redis-7.4.5.tar.gz
 
     - name: Build Redis statically
       run: |
-        cd redis-stable
+        cd redis-7.4.5
         make CFLAGS="-static" LDFLAGS="-static"
 
     - name: Verify static linking
