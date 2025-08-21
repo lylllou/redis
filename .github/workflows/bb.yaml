@@ -32,7 +32,7 @@ jobs:
         ldd redis-stable/src/redis-server || echo "Static binary confirmed (ldd failed)"
 
     - name: Upload Redis binary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: redis-static-binaries
         path: |
