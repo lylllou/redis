@@ -37,4 +37,4 @@ jobs:
         name: redis-static-binaries
         path: |
           redis-7.4.5/src/redis-server
-         redis-7.4.5/src/redis-cli
+          redis-7.4.5/src/redis-cli
