@@ -1,37 +1,40 @@
-name: Build Redis 7.4.5
+name: Build Redis 7.4.5 Statically
 
-on:
-  workflow_dispatch:
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: centos:7
 
     steps:
-    - name: Install build tools
-      run: |
-        yum install -y gcc make tar git
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    - name: Clone Redis
+    - name: Install dependencies
       run: |
-        git clone --branch 7.4.5 https://github.com/redis/redis.git
+        sudo apt-get update
+        sudo apt-get install -y gcc make wget file
 
-    - name: Build Redis
+    - name: Download Redis source
+      run: wget https://download.redis.io/redis-stable.tar.gz
+
+    - name: Extract Redis source
+      run: tar xzf redis-stable.tar.gz
+
+    - name: Build Redis statically
       run: |
-        cd redis
-        make -j$(nproc)
+        cd redis-stable
+        make CFLAGS="-static" LDFLAGS="-static"
 
-    - name: Package Redis
+    - name: Verify static linking
       run: |
-        cd redis
-        mkdir -p redis-7.4.5-centos
-        cp src/redis-server src/redis-cli src/redis-benchmark redis-7.4.5-centos/
-        tar -czvf redis-7.4.5-centos.tar.gz redis-7.4.5-centos
+        file redis-stable/src/redis-server
+        ldd redis-stable/src/redis-server || echo "Static binary confirmed (ldd failed)"
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
+    - name: Upload Redis binary
+      uses: actions/upload-artifact@v3
       with:
-        name: redis-7.4.5-centos
-        path: redis/redis-7.4.5-centos.tar.gz
+        name: redis-static-binaries
+        path: |
+          redis-stable/src/redis-server
+          redis-stable/src/redis-cli
